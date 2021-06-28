@@ -1,0 +1,197 @@
+.detail-wrapper-left {
+    margin-bottom: 20px;
+}
+
+.frame {
+    border-style: solid;
+}
+
+.frame-timber {
+    border-image: url('../images/frame_timber.jpg') 47 46 48 51 stretch;
+}
+
+.frame-black {
+    border-image: url('../images/frame_black.jpg') 60 64 62 63 stretch;
+}
+
+.frame-white {
+    border-image: url('../images/frame_white.jpg') 47 49 46 46 stretch;
+}
+
+.frame-silver {
+    border-image: url('../images/frame_silver.jpg') 42 42 43 45 stretch;
+}
+
+.frame-steel {
+    border-image: url('../images/frame_italian_steel.jpg') 56 55 54 54 stretch;
+}
+
+.frame-ash {
+    border-image: url('../images/frame_italian_ash.jpg') 61 64 60 64 stretch;
+}
+
+.frame-scoop {
+    border-image: url('../images/frame_italian_scoop.jpg') 62 62 62 61 stretch;
+}
+
+.mat-black {
+    background-color: #2a2b2d;
+}
+
+.mat-white {
+    background-color: #efefef;
+}
+
+.bevel-black {
+    border: none;
+}
+
+.bevel-white {
+    border: none;
+}
+
+#user-photo {
+    width: 90%;
+}
+
+@media only screen and (min-width: 520px) {
+    .frame {
+        border-width: 35px;
+    }
+    .print {
+        padding: 25px;
+    }
+    .bevel-black {
+        border: 1px solid #000;
+    }
+    .bevel-white {
+        border: 1px solid #e0e0e0;
+    }
+}
+
+@media only screen and (min-width: 870px) {
+    .frame {
+        border-width: 35px;
+    }
+    .print {
+        padding: 25px;
+    }
+    .bevel-black {
+        border: 3px solid #000;
+    }
+    .bevel-white {
+        border: 3px solid #e0e0e0;
+    }
+}
+
+@media only screen and (min-width: 1140px) {
+    .frame {
+        border-width: 45px;
+    }
+    .print {
+        padding: 40px;
+    }
+}
+
+.photo-mat-color ul li a {
+    border-radius: 0;
+    width: 50px;
+    height: 50px;
+    display: block;
+}
+
+.photo-mat-color ul li.active a {
+    border: 2px solid #c2a476;
+}
+
+.photo-mat-color ul li a {
+    border: 2px solid #000;
+}
+
+.photo-mat-black a {
+    background: #000;
+}
+
+.photo-mat-white a {
+    border: 2px solid #ccc;
+}
+
+.photo-frame-style ul li a img {
+    border: 2px solid #000;
+}
+
+.photo-frame-style ul li.active a img {
+    border: 2px solid #c2a476;
+}
+
+.frame-none {
+    border-image: none;
+    background-image: none;
+    background-color: #fff;
+    border-style: none;
+    border-width: 0px;
+}
+
+.frame-none .print {
+    padding: 0px;
+}
+
+.mat-color {
+    width: 90px;
+    border: 1px solid #ccc;
+    display: block;
+    padding: 12px;
+}
+
+.canvas-edge img {
+    /*box-shadow: 1px 1px 0px #999, 2px 2px 0px #999, 3px 3px 0px #999, 4px 4px 0px #999, 5px 5px 0px #999, 6px 6px 0px #999;*/
+    box-shadow:2px 2px 0px #999, 4px 4px 0px #999, 5px 5px 0px #999, 6px 6px 0px #999, 7px 7px 0px #999, 8px 8px 0px #999;
+}
+
+.acrylic-dots {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+}
+
+.acrylic-dots span {
+    width: 15px;
+    height: 15px;
+    display: block;
+    position: absolute;
+    background: url(../images/acry-btn3.png);
+    background-size: 15px;
+}
+
+span.dots-left-top {
+    left:20px;
+    top: 20px;
+}
+
+span.dots-right-top {
+    right:20px;
+    top: 20px;
+}
+
+span.dots-left-bottom {
+    left: 20px;
+    bottom: 20px;
+}
+
+span.dots-right-bottom {
+    right: 20px;
+    bottom: 20px;
+}
+
+#productcoffee {
+    position: relative;
+}
+
+.acrylic-mount {
+
+}
+.table .print {
+    padding: 10px;
+}
