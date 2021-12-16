@@ -48,6 +48,12 @@
             <li>
                 <a href="{{url('/admin/viewBoxes')}}"><i class="fa fa-dropbox"></i> <span class="nav-label">Box</span></a>
             </li>
+            
+            
+            <li>
+                <a href="{{url('/admin/open')}}"><i class="fa fa-calendar-check-o"></i> <span class="nav-label">Shop Open Details</span></a>
+            </li>
+            
             @if(Session::get('role_id')==1)
            
             <li>

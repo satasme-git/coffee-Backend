@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+// use Session;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,9 +28,12 @@ Route::get('/admin/customers', 'App\Http\Controllers\Admin\CustomerController@Cu
 Route::post('/admin/customers', 'App\Http\Controllers\Admin\CustomerController@saveCustomers');
 Route::get('/admin/deletecustomers/{id}', 'App\Http\Controllers\Admin\CustomerController@deleteCustomers');
 
-
 Route::get('/customer_blacklist/{id}','App\Http\Controllers\Admin\CustomerController@blacklist');
 Route::get('/customer_active/{id}','App\Http\Controllers\Admin\CustomerController@active');
+
+Route::get('/admin/createCustomer','App\Http\Controllers\Admin\CustomerController@create');
+Route::post('/admin/add_customer', 'App\Http\Controllers\Admin\CustomerController@add_customer');
+Route::post('/admin/updateCustomerById/{id}', 'App\Http\Controllers\Admin\CustomerController@updateCustomerById');
 
 //foods
 Route::get('/admin/addfood/{id}', 'App\Http\Controllers\Admin\CoffeeController@addFood');
@@ -43,11 +46,6 @@ Route::get('/admin/addcategory/{id}', 'App\Http\Controllers\Admin\CoffeeControll
 Route::get('/admin/category', 'App\Http\Controllers\Admin\CoffeeController@category');
 Route::post('/admin/category', 'App\Http\Controllers\Admin\CoffeeController@saveCategory');
 Route::get('/admin/deletecategory/{id}', 'App\Http\Controllers\Admin\CoffeeController@deleteCategory');
-
-/////////////////////
-Route::get('/admin/addcategory/{id}', 'App\Http\Controllers\Admin\CoffeeController@addcategory');
-Route::post('/admin/storecategory', 'App\Http\Controllers\Admin\CoffeeController@add_category');
-// Route::get('/admin/addboxes/{id}', 'App\Http\Controllers\Admin\CoffeeController@addboxes');
 
 //subcategory
 Route::get('/admin/addsubcategory/{id}', 'App\Http\Controllers\Admin\CoffeeController@addSubcategory');
@@ -73,12 +71,18 @@ Route::get('/getAllsubcategory', 'App\Http\Controllers\FoodController@getAllsubc
 ///chamil
 Route::get('/getFoodById/{id}', 'App\Http\Controllers\FoodController@getFoodById');
 
+/////////////////////
+Route::get('/admin/addcategory/{id}', 'App\Http\Controllers\Admin\CoffeeController@addcategory');
+Route::post('/admin/storecategory', 'App\Http\Controllers\Admin\CoffeeController@add_category');
 
 //usermanagement
 
 Route::post('/login', 'App\Http\Controllers\Auth\RegisterController@login');
 Route::post('/register', 'App\Http\Controllers\Auth\RegisterController@register');
 Route::post('/profile/{id}', 'App\Http\Controllers\Auth\RegisterController@profile');
+
+Route::put('/updatePassword/{id}', 'App\Http\Controllers\Auth\ForgotPasswordController@updatePassword');
+
 
 //order
 Route::post('/neworder', 'App\Http\Controllers\OrderController@newOrder');
@@ -103,7 +107,7 @@ Route::post('test', function(Request $request){
 
 // Route::post('/cart_data', array('before' => 'csrf'), 'App\Http\Controllers\OrderController@testOrder');
 
-
+// Route::get('/resetPassword', 'App\Http\Controllers\Auth\ForgotPasswordController@resetPassword');
 
 Route::post('/cart_data', 'App\Http\Controllers\OrderController@testOrder');
 
@@ -135,6 +139,43 @@ Route::get('/admin/view_system_users', 'App\Http\Controllers\SystemUserControlle
 Route::get('/admin/update/{id}', 'App\Http\Controllers\SystemUserController@edit');
 Route::get('/admin/deleteuser/{id}', 'App\Http\Controllers\SystemUserController@destroy');
 
-Route::post('/login', 'App\Http\Controllers\Auth\RegisterController@systemUserLoginCheck');
+Route::post('/syslogin', 'App\Http\Controllers\Auth\RegisterController@systemUserLoginCheck');
 Route::get('/logout', 'App\Http\Controllers\Auth\RegisterController@systemuserlogout');
 
+// open controller
+Route::get('/admin/open', 'App\Http\Controllers\OpenController@open');
+Route::get('/admin/editopentime', 'App\Http\Controllers\OpenController@createTime');
+Route::post('/admin/editopentime', 'App\Http\Controllers\OpenController@store');
+
+
+Route::get('/admin/addclose/{id}', 'App\Http\Controllers\OpenController@addclose');
+Route::post('/admin/addclose', 'App\Http\Controllers\OpenController@add_close');
+Route::get('/admin/deleteclose/{id}', 'App\Http\Controllers\OpenController@deleteclose');
+
+//pos
+Route::get('/admin/pos', 'App\Http\Controllers\POSController@index');
+Route::get('/admin/get-all-foods', 'App\Http\Controllers\POSController@getAllFoods');
+Route::post('/add/to/cart/', 'App\Http\Controllers\POSController@addToCart');
+// Route::get('/add/to/cart/{id}', 'App\Http\Controllers\POSController@addToCart');
+Route::get('cart', 'App\Http\Controllers\POSController@cart');
+
+Route::get('/get_food_all', 'App\Http\Controllers\POSController@get_food_all');
+Route::get('/get_box_all', 'App\Http\Controllers\POSController@get_box_all');
+
+Route::get('/remove/to/cart/{id}', 'App\Http\Controllers\POSController@removeToCart');
+Route::get('/loadcart', 'App\Http\Controllers\POSController@loadcart');
+Route::get('getdatabyid/{id}', 'App\Http\Controllers\POSController@getDatabyId');
+Route::get('/cart_info', 'App\Http\Controllers\POSController@cartInfo');
+
+
+
+Route::post('/checkout', 'App\Http\Controllers\POSController@checkout');
+Route::get('/loadcart_product', 'App\Http\Controllers\POSController@loadcartProduct');
+Route::get('/cancel/to/cart', 'App\Http\Controllers\POSController@cancelToCart');
+Route::get('/hold/{id}', 'App\Http\Controllers\POSController@hold');
+Route::get('/count', 'App\Http\Controllers\POSController@count');
+Route::get('/addtocart/holdInvoice/{id}', 'App\Http\Controllers\POSController@addtocart_holdInvoice');
+Route::post('/add_customers', 'App\Http\Controllers\POSController@add_customers');
+
+Route::post('/form_submit', 'App\Http\Controllers\POSController@form_submit');
+Route::get('/testing', 'App\Http\Controllers\POSController@testing');

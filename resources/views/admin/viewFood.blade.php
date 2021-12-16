@@ -1,73 +1,67 @@
-@extends('admin.layouts.app2')
+
+@extends('Layouts.app')
 
 @section('content')
-<link href="{{ asset('css/plugins/dataTables/datatables.css')}}">
-<link href="{{URL::asset('')}}css/admin/animate.css" rel="stylesheet">
-<section class="content-header">
-    <h1>
-        Order
-        <small>View order details</small>
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/addboxes/0')}}">orders</a></li>
-        <li class="active">order details</li>
-    </ol>
-</section>
-<section class="content">
+<div class="page-header" >
 
-    <div class="row animated fadeInRight" >
+    <div class="page-header-content">
+        <div class="page-title" style="margin-top:-10px;margin-bottom:-10px">
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Customer</span> - View customers</h4>
+        </div>
+    </div>
 
-        <div class="col-md-12">
+    <div class="breadcrumb-line" >
+        <ul class="breadcrumb">
+            <li><a href="/dashboard"><i class="icon-home2 position-left"></i> Home</a></li>
+            <li><a href="/admin/view_user">Customer</a></li>
+            <li class="active">View customers</li>
+        </ul>
+    </div>
+</div>
+<div class="content  animated fadeInRight">
+    <div class="panel panel-flat">
+        <div class="panel-body">
 
-            <div class="box box-primary">
-
-                <div style="padding:5px">
-
-
-
-
-                    @if (session('alert'))
-                    @foreach($orders as $order)
-                    <div id="fcoffee" onclick="freeCoffee({{$order->id}})">abc </div>
-                    @endforeach
-                    <script type="text/javascript">
-                        function freeCoffee(id) {
-                        bootbox.confirm({
-                        title: "Free Coffee",
-                                message: "Are you sure you want to give free coffee?",
-                                buttons: {
-                                confirm: {
-                                label: 'Yes',
-                                        className: 'btn-success'
-                                },
-                                        cancel: {
-                                        label: 'No',
-                                                className: 'btn-danger'
-                                        }
-                                },
-                                callback: function(result) {
-                                if (result) {
-                                window.location.href = '{{url("admin/acceptfreecoffee")}}' + '/' +
-                                        id;
-                                } else {
-                                window.location.href = '{{url("admin/denyfreecofee")}}' + '/' + id;
+            @if (session('alert'))
+            @foreach($orders as $order)
+            <div id="fcoffee" onclick="freeCoffee({{$order->id}})">abc </div>
+            @endforeach
+            <script type="text/javascript">
+                function freeCoffee(id) {
+                bootbox.confirm({
+                title: "Free Coffee",
+                        message: "Are you sure you want to give free coffee?",
+                        buttons: {
+                        confirm: {
+                        label: 'Yes',
+                                className: 'btn-success'
+                        },
+                                cancel: {
+                                label: 'No',
+                                        className: 'btn-danger'
                                 }
-                                }
-                        });
+                        },
+                        callback: function(result) {
+                        if (result) {
+                        window.location.href = '{{url("admin/acceptfreecoffee")}}' + '/' +
+                                id;
+                        } else {
+                        window.location.href = '{{url("admin/denyfreecofee")}}' + '/' + id;
                         }
-                        var elem = document.getElementById("fcoffee");
-                        if (typeof elem.onclick == "function") {
-                        elem.onclick.apply(elem);
                         }
-                    </script>
-                    @endif
+                });
+                }
+                var elem = document.getElementById("fcoffee");
+                if (typeof elem.onclick == "function") {
+                elem.onclick.apply(elem);
+                }
+            </script>
+            @endif
 
-
-
-
-
-
+            <div class="ibox-content">
+                <!-- <form id="addcoffee" method="post" enctype="multipart/form-data" action="{{url('admin/food')}}"> -->
+                {{ csrf_field() }}
+                <div class="row">
                     @foreach($orders as $order)
 
                     <div class="row">
@@ -93,68 +87,78 @@
                     </div>
                     @endforeach
 
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example"
-                               style="margin-top:2%">
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Food</th>
-                                    <th>Quantity</th>
-                                    <th>Size</th>
-                                    <th>Topins</th>
-                                    <th>price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $path = '/images/food/'; ?>
 
 
 
-                                @foreach($items as $item)
-                                <tr>
+                    <table class="table table-striped  table-hover dataTables-example"
+                           style="margin-top:2%">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Food</th>
+                                <th>Quantity</th>
+                                <th>Size</th>
+                                <th>Topins</th>
+                                <th>price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $path = '/images/food/'; ?>
+                            <?php $path2 = '/images/Box/'; ?>
 
-                                    <td>
-                                        <img src="{{asset($path.$item->img)}}" style="width:52px;height:52px;">
-                                    </td>
+ 
+                            <!-- subcategory_id -->
 
-                                    <td>{{$item->name}}</td>
-                                    <td>{{$item->qty}}</td>
-                                    <td>{{$item->pSize}}</td>
-                                    <td>
-                                        @if($item->pFcream!="0")
-                                        {{$item->pFcream}} ,
+                            @foreach($items as $item)
+                            <tr>
 
-                                        @endif
-                                        @if($item->pSkim!="0")
-                                        {{$item->pSkim}} ,
-
-                                        @endif
-                                        @if($item->pSoy!="0")
-                                        {{$item->pSoy}} ,
-
-                                        @endif
-                                        @if($item->pAlmond!="0")
-                                        {{$item->pAlmond}} ,
-
-                                        @endif
-                                        @if($item->pOat!="0")
-                                        {{$item->pOat}}
-
-                                        @endif
-
-                                    </td>
-                                    <td>{{money_formate($item->price)}}</td>
-                                </tr>
-                                @endforeach
+                                <td>
+                                    @if($item->subcategory_id==9)
+                                    <img src="{{asset($path2.$item->img)}}" style="width:52px;height:52px;">
+                                    @else
+                                    <img src="{{asset($path.$item->img)}}" style="width:52px;height:52px;">
+                                    @endif
+                                   
+                                </td>
 
 
+                                <td>{{$item->name}}</td>
+                                <td>{{$item->qty}}</td>
+                                <td>{{$item->pSize}}</td>
+                                <td>
+                                    @if($item->pFcream!="0")
+                                    {{$item->pFcream}} ,
 
-                            </tbody>
-                        </table>
+                                    @endif
+                                    @if($item->pSkim!="0")
+                                    {{$item->pSkim}} ,
+
+                                    @endif
+                                    @if($item->pSoy!="0")
+                                    {{$item->pSoy}} ,
+
+                                    @endif
+                                    @if($item->pAlmond!="0")
+                                    {{$item->pAlmond}} ,
+
+                                    @endif
+                                    @if($item->pOat!="0")
+                                    {{$item->pOat}}
+
+                                    @endif
+
+                                </td>
+                                <td>{{money_formate($item->price)}}</td>
+                            </tr>
+                            @endforeach
 
 
-                    </div>
+
+                        </tbody>
+                    </table>
+
+
+
 
                     @foreach($orders as $order)
                     <div class="row">
@@ -182,14 +186,22 @@
 
                     @endif
                     @endforeach
-                    <!--</div>-->
 
                 </div>
+            </div>
 
-            </div><!-- /.card-body -->
+            <!-- </form> -->
         </div>
+
     </div>
-</section>
+
+
+</div>
+
+
+
+
+
 
 
 @endsection

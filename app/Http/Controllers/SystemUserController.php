@@ -14,7 +14,7 @@ class SystemUserController extends Controller
     
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
+             $this->middleware(function ($request, $next) {
             if (Session::get("user_email") == "") {
                 Redirect::to('/')->send();
             }
@@ -48,6 +48,13 @@ class SystemUserController extends Controller
         $users = Role::all();
 
         return view('admin.AddUser', compact('users'));
+    }
+    
+    public function createTime()
+    {
+        $users = Role::all();
+
+        return view('admin.AddTime', compact('users'));
     }
 
     /**

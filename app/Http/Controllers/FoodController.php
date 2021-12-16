@@ -65,6 +65,24 @@ class FoodController extends Controller
         return json_encode($data);
     }
 
+    // protected function getSubcategoryWithFood(Request $req)
+    // {
+    //     if (empty($req->id)) {
+    //         $data['subcategory'] = DB::table('foods')
+    //                ->join('subcategory', 'subcategory.id', '=','foods.subcategory_id' )
+    //                ->select('foods.*', 'subcategory.name as subcategory')
+    //                ->get();
+    //     } else {
+    //         $id =$req->get('id');
+    //         $data['subcategory'] = DB::table('foods')
+    //         ->join('subcategory', 'subcategory.id', '=','foods.subcategory_id' )
+    //         ->select('foods.*', 'subcategory.name as subcategory')
+    //                ->where('subcategory.id', $id)
+    //                ->get();
+    //     }
+
+    //    return json_encode($data);
+    // }
 
     protected function getCategoryWithFood(Request $req)
     {
@@ -85,27 +103,73 @@ class FoodController extends Controller
         return json_encode($data);
     }
 
-  
+    // protected function getExtra(Request $req)
+    // {
+    //     if (empty($req->id)) {
+    //         $data=[];
+    //         $category = DB::table('category')->get()->all();
+    //            foreach($category as $cat){
+    //                $name=$cat->name;
+    //                $catid=$cat->id;
+    //             $details[] = DB::table('foods')
+    //             ->where('foods.category_id', $cat->id)
+    //             ->get();
+    //             $data[]=collect(['name'=> $name,'id'=> $catid,'details'=>$details]);
+    //         }
+    //     }
+
+    //    return json_encode($data);
+    // }
 
     protected function getSubcategoryWithFood(Request $req)
     {
         if (empty($req->id)) {
             $data = [];
             $subcategory = DB::table('subcategory')->get()->all();
-           
+            foreach ($subcategory as $subcat) {
+                unset($details);
+                $name = $subcat->name;
+                $subcatid = "" . $subcat->id;
+                $image = 'https://boxesfree.shop/images/subcategory/' . $subcat->image;
+                $details = DB::table('foods')
+                    ->where('foods.subcategory_id', $subcatid)
+                    ->get();
+                $data[] = collect(['name' => $name, 'id' => $subcatid, 'image' => $image, 'details' => $details]);
+            }
         } else {
             $data = [];
             $subcategory = DB::table('subcategory')
                 ->get()
                 ->where('id', $req->get('id'))
                 ->all();
-            
+            foreach ($subcategory as $subcat) {
+                unset($details);
+                $name = $subcat->name;
+                $subcatid = $subcat->id;
+                $details = DB::table('foods')
+                    ->where('foods.subcategory_id', $subcatid)
+                    ->get();
+                $data[] = collect(['name' => $name, 'id' => $subcatid, 'details' => $details]);
+            }
         }
         return json_encode($data);
     }
     protected function getAllsubcategory()
     {
-       
+        // if (empty($req->id)) {
+            $data = [];
+            $subcategory = DB::table('subcategory')->get()->all();
+            foreach ($subcategory as $subcat) {
+                unset($details);
+                $name = $subcat->name;
+                $color = $subcat->color;
+                $subcatid = "" . $subcat->id;
+                $image = 'https://boxesfree.shop/images/subcategory/' . $subcat->image;
+        
+                $data[] = collect(['name' => $name, 'id' => $subcatid, 'image' => $image,'color'=>$color]);
+            }
+        // } 
+        return json_encode($data);
     }
     
 
@@ -175,7 +239,10 @@ class FoodController extends Controller
             $details = DB::table('sizes')
                 ->where('sizes.food_id', $req->id)
                 ->get();
-           
+            // $addExtra= DB::table('coffee_add_extra')
+            //     ->where('coffee_add_extra.food_id', $req->id)
+            //     ->get();
+            $data = collect(['name' => $name, 'id' => $subcatid, 'price' => $price, 'details' => $coffee_sizes, 'data' => $coffee_add_extra_new]);
         }
 
         // $applications = DB::table('foods')
@@ -186,4 +253,5 @@ class FoodController extends Controller
 
         return $data;
     }
+    
 }

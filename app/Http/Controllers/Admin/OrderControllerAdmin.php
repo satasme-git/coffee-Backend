@@ -18,14 +18,48 @@ class OrderControllerAdmin extends Controller
  
         //     Redirect::to('/')->send();
         //   }
+        //     $this->middleware(function ($request, $next) {
+        //     if (Session::get("user_email") == "") {
+        //         Redirect::to('/')->send();
+        //     }
+        //     return $next($request);
+        // });
     }
 
     protected function orders()
     {
-  
+        //    $fetchdata['orders'] = DB::table('orders')
+        //    ->join('order_foods', 'orders.id', '=','order_foods.orders_id' )
+        //    ->join('foods', 'foods.id', '=','order_foods.foods_id' )
+        //    ->select('orders.*', 'order_foods.qty as itemqty', 'order_foods.price as itemprice', 'foods.name as food')
+        //    ->get()->all();
+        //    $orderid=0;
+        //    $data['orders']=array();
+        //    $count=0;
+        //    foreach($fetchdata['orders'] as $orders){
+        //         if($orders->orderid ==$orderid){
+        //             $data['orders'][$orderid].push($orders);
+        //         }else{
+        //             $count++;
+        //             $data['orders']=['orderid'=>$orders->orderid,$orders];
+        //         }
+        //         $qty=$orders->itemqty;
+        //    }
+        //    dd($count);
+
+        // $data['orders']=OrderFoods::get()->first();
+
+        // $data['orders']=Orders::join ('orders', 'user.schedule_id', '=', 'schedules.id')
+        //     ->select ('users.id')
+        //     ->orderBy ('schedules.date')
+        //     ->get ()->toArray ();
+
+        // $data['orders']=Orders::with (['orderfoods'])->get()->all();
+        
          $data['orders']= DB::table('orders')
            ->join('users', 'users.id', '=', 'orders.users_id')
             ->select('orders.*','users.name','users.mobile_no')
+            ->where('orders.status','!=',10)
             ->get();
         
 
@@ -57,7 +91,7 @@ class OrderControllerAdmin extends Controller
 			$items = DB::table('order_foods')
 			->join('foods', 'order_foods.foods_id', '=', 'foods.id')
 			->join('order_items_topins', 'order_foods.id', '=', 'order_items_topins.order_foods_id')
-			->select('foods.img','foods.id','foods.name','foods.description', 'order_foods.*','order_items_topins.*')
+			->select('foods.img','foods.id','foods.name','foods.description','foods.subcategory_id', 'order_foods.*','order_items_topins.*')
             ->where('order_foods.orders_id', $id)
             ->get();
 

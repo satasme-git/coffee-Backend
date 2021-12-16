@@ -17,6 +17,7 @@
 	 <script src="{{URL::asset('')}}js/jquery.1.12.4.min.js"></script>
     <script src="{{url('/')}}/js/bootstrap.min.js"></script>
      <script src="{{url('/')}}/js/plugins/bootbox/bootbox.min.js"></script>
+     
 
 </head>
 

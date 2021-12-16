@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Events;
-use Carbon\Carbon;
-use File;
 use Illuminate\Http\Request;
+use App\Models\Events;
 use Illuminate\Support\Facades\DB;
-use Intervention\Image\ImageManagerStatic as Image;
-use Redirect;
-use Session;
 use Validator;
-
+use File;
+use Session;
+use Redirect;
+use Intervention\Image\ImageManagerStatic as Image;
 class EventController extends Controller
 {
-    public function __construct()
+     public function __construct()
     {
         // if(empty(Session::get('user_email'))){
-
+ 
         //     Redirect::to('/')->send();
         //   }
+        //   $this->middleware(function ($request, $next) {
+        //     if (Session::get("user_email") == "") {
+        //         Redirect::to('/')->send();
+        //     }
+        //     return $next($request);
+        // });
     }
     /**
      * Display a listing of the resource.
@@ -28,7 +32,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $expenses = Events::all();
+        $expenses = DB::table('events')->where('status', 1)->get();
         return json_encode($expenses);
     }
 
@@ -99,24 +103,37 @@ class EventController extends Controller
     }
     public function viewAll()
     {
+          if(empty(Session::get('user_email'))){
+ 
+            Redirect::to('/')->send();
+          }else{
         $data['events'] = DB::table('events')->where('status', 1)->get();
         return view('admin/events', $data);
+          }
     }
     public function addevents($id = 0, Request $req)
     {
-        $data = [];
-        if (!empty($id)) {
-            $data['records'] = DB::table('events')->where('id', $id)->get()->first();
-
-            if (empty($data['records'])) {
-                return redirect('/admin/addEvent');
+          if(empty(Session::get('user_email'))){
+ 
+            Redirect::to('/')->send();
+          }else{
+            $data = [];
+            if (!empty($id)) {
+                $data['records'] = DB::table('events')->where('id', $id)->get()->first();
+    
+                if (empty($data['records'])) {
+                    return redirect('/admin/addEvent');
+                }
             }
-        }
-        return view('admin/addEvent', $data);
+            return view('admin/addEvent', $data);
+          }
     }
-    public function add_Events(Request $req)
-    {
-        $title = $req->get('title');
+    public function add_Events(Request $req){
+  if(empty(Session::get('user_email'))){
+ 
+            Redirect::to('/')->send();
+          }else{
+    $title = $req->get('title');
         $description = $req->get('description');
         $id = $req->get('id');
         $image = $req->file('event');
@@ -191,13 +208,12 @@ class EventController extends Controller
             }
         }
         return redirect('admin/viewEvents');
-
+}
     }
-    public function deleteEventss($id, Request $req)
-    {
-        $data = ['status' => '0'];
-        DB::table('events')->where('id', $id)->update($data);
-        $req->session()->flash('msg', '<div class="alert alert-success">Event Deleted <a class="close" data-dismiss="alert">×</a> </div>');
-        return redirect('admin/viewEvents');
+    public function deleteEventss($id,Request $req){
+        $data = ['status' => '0',];
+		DB::table('events')->where('id', $id)->update($data);
+		$req->session()->flash('msg', '<div class="alert alert-success">Event Deleted <a class="close" data-dismiss="alert">×</a> </div>');
+	   return redirect('admin/viewEvents');
     }
 }

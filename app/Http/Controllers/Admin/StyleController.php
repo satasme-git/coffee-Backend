@@ -2,51 +2,55 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use File;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Redirect;
-use Session;
 use Validator;
+use File;
+use Session;
+use Redirect;
 
 class StyleController extends Controller
 {
-
-    public function __construct()
+    
+public function __construct()
     {
         // if(empty(Session::get('user_email'))){
-
+ 
         //     Redirect::to('/')->send();
         //   }
+        //   $this->middleware(function ($request, $next) {
+        //     if (Session::get("user_email") == "") {
+        //         Redirect::to('/')->send();
+        //     }
+        //     return $next($request);
+        // });
     }
-    protected function slides()
+	protected function slides()
     {
-
-        $records = DB::table('slides')->get()->all();
+		
+		$records = DB::table('slides')->get()->all();
         return view('admin/slides', ['records' => $records]);
+	   
+	}
 
-    }
-
-    protected function addslides($id)
+	protected function addslides($id)
     {
-		
-        $data = [];
-        if (!empty($id)) {
-            $data['slides'] = DB::table('slides')->where('id', $id)->get()->first();
-
-            if (empty($data['slides'])) {
-                return redirect('/admin/slides');
-            }
-        }
-        return view('admin/AddSlide', $data);
-
-    }
-
- 
-    protected function saveslides(Request $req)
+		$data=[];
+		if(!empty($id)){
+			$data['slides'] = DB::table('slides')->where('id',$id)->get()->first();
+			
+			if(empty($data['slides'])){
+				return redirect('/admin/slides');
+			}
+		}
+		return view('admin/AddSlide',$data);
+	   
+	}
+	
+	protected function saveslides(Request $req )
     {
-		
+	
         $id = $req->get('id');
         $description = $req->get('description');
         $image = $req->file('thumb');
@@ -67,7 +71,7 @@ class StyleController extends Controller
                 if ($req->hasFile('thumb')) {
                     $image = $req->file('thumb');
                     $imagename = $time . '_thumb.' . $image->getClientOriginalExtension();
-                    $destinationPath = public_path('/work/public/images/slides');
+                    $destinationPath = public_path('/work/public/images/slides/');
 
                     if (!File::isDirectory($destinationPath)) {
                         File::makeDirectory($destinationPath, 0777, true, true);
@@ -100,7 +104,7 @@ class StyleController extends Controller
                 if ($req->hasFile('thumb')) {
                     $image = $req->file('thumb');
                     $imagename = $time . '_thumb.' . $image->getClientOriginalExtension();
-                    $destinationPath = public_path('/work/public/images/slides');
+                    $destinationPath = public_path('/work/public/images/slides/');
 
                     if (!File::isDirectory($destinationPath)) {
                         File::makeDirectory($destinationPath, 0777, true, true);
@@ -117,26 +121,26 @@ class StyleController extends Controller
         }
 
         return redirect('admin/slides');
-    }
+	}
 
-    protected function deleteslides($id = 0, Request $req)
+	protected function deleteslides($id=0,Request $req )
     {
+		
+		if(!empty($id)){
+		    DB::table('slides')->where('id', $id)->delete();
+			return redirect()->to('/admin/slides')->with('msg', '<div class="alert alert-success">Record deleted.<a class="close" data-dismiss="alert">×</a></div>.');
+		}else{
+			return redirect()->to('/admin/slides')->with('msg', '<div class="alert alert-success">Invalid record.<a class="close" data-dismiss="alert">×</a></div>');
+		}
+	   
+	}
 
-        if (!empty($id)) {
-            DB::table('slides')->where('id', $id)->delete();
-            return redirect()->to('/admin/slides')->with('msg', '<div class="alert alert-success">Record deleted.<a class="close" data-dismiss="alert">×</a></div>.');
-        } else {
-            return redirect()->to('/admin/slides')->with('msg', '<div class="alert alert-success">Invalid record.<a class="close" data-dismiss="alert">×</a></div>');
-        }
-
-    }
-
-    protected function getslides()
+	protected function getslides()
     {
-
-        $records = DB::table('slides')->get()->all();
+		
+		$records = DB::table('slides')->get()->all();
         return json_encode($records);
-
-    }
-
+	   
+	}
+	
 }

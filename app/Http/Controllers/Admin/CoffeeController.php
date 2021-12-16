@@ -4,51 +4,56 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use File;
+use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManagerStatic as Image;
-use Redirect;
-use Session;
 use Validator;
-
-class CoffeeController extends Controller
-{
-    public function __construct()
+use Redirect;
+class CoffeeController extends Controller {
+ public function __construct()
     {
-
+       
         //   if(empty(Session::get('user_email'))){
-
+ 
         //     Redirect::to('/')->send();
         //   }
+        //   $this->middleware(function ($request, $next) {
+        //     if (Session::get("user_email") == "") {
+        //         Redirect::to('/')->send();
+        //     }
+        //     return $next($request);
+        // });
     }
-    protected function test()
-    {
+    protected function test() {
         return view('admin/test');
     }
 
-    protected function food()
-    {
-        if (empty(Session::get('user_email'))) {
-
+    protected function food() {
+             if(empty(Session::get('user_email'))){
+ 
             Redirect::to('/')->send();
-        } else {
-
-            $data['food'] = DB::table('foods')
-//            ->join('category', 'category.id', '=', 'foods.category_id')
-                ->join('subcategory', 'subcategory.id', '=', 'foods.subcategory_id')
-                ->select('foods.*')
-                ->addSelect('foods.*', 'subcategory.name as subcategory')
-                ->get();
-
-            return view('admin/food', $data);
-        }
+          }else{
+                $data['food'] = DB::table('foods')
+        //            ->join('category', 'category.id', '=', 'foods.category_id')
+                        ->join('subcategory', 'subcategory.id', '=', 'foods.subcategory_id')
+                        ->select('foods.*')
+                        ->addSelect('foods.*', 'subcategory.name as subcategory')
+                        ->where('subcategory.id','!=', 9)
+                        ->get();
+        
+                return view('admin/food', $data);
+          }
     }
 
-    protected function addFood($id = 0, Request $req)
-    {
+    protected function addFood($id = 0, Request $req) {
+        
         $data = [];
 //        $data['category'] = DB::table('category')->get()->all();
-        $data['subcategory'] = DB::table('subcategory')->get()->all();
+        $data['subcategory'] = DB::table('subcategory')
+        ->where('subcategory.id','!=', 9)
+        ->get()
+        ->all();
         if (!empty($id)) {
             $data['food'] = DB::table('foods')->where('id', $id)->get()->first();
             $data['sizes'] = DB::table('sizes2')->where('food_id', $id)->get()->first();
@@ -60,11 +65,12 @@ class CoffeeController extends Controller
         return view('admin/addFood', $data);
     }
 
-    protected function saveFood(Request $req)
-    {
+    protected function saveFood(Request $req) {
         $name = $req->get('name');
+//        $category = $req->get('category');
         $subcategory = $req->get('subcategory');
         $description = $req->get('description');
+
 
         if ($subcategory == 1) {
             $price = $req->get('small');
@@ -84,32 +90,11 @@ class CoffeeController extends Controller
         $id = $req->get('id');
         $food = $req->file('food');
 
-//        echo "" . $name . "<br/>" . "" . $subcategory . "<br/>" . $description . "<br/>" . $small . "<br/>" . $medium . "<br/>" . $large . "<br/>" . $fullCream . "<br/>" . $skim . "<br/>" . $soy . "<br/>" . $almond . "<br/>" . $oat . "<br/>" . $id . "</br>";
+        $validationdata = array('price' => $price, 'subcategory' => $subcategory, 'name' => $name);
+        $validationtype = array('price' => 'required', 'subcategory' => 'required', 'name' => 'required');
 
+        $validator = Validator::make($validationdata, $validationtype);
 
-        if ($subcategory == 1) {
-            $validationdata = array('price' => $price, 'subcategory' => $subcategory, 'name' => $name, 'description' => $description, 'small' => $small, 'medium' => $medium, 'large' => $large, 'fullCream' => $fullCream, 'skim' => $skim, 'soy' => $soy, 'almond' => $almond, 'oat' => $oat);
-            $validationtype = array('price' => 'required',
-                'subcategory' => 'required|not_in:0',
-                'name' => 'required',
-                'description' => 'required',
-                'small' => 'required|numeric|min:0',
-                'medium' => 'required|numeric|min:0',
-                'large' => 'required|numeric|min:0',
-                'fullCream' => 'required|numeric|min:0',
-                'skim' => 'required|numeric|min:0',
-                'soy' => 'required|numeric|min:0',
-                'almond' => 'required|numeric|min:0',
-                'oat' => 'required|numeric|min:0',
-               
-
-            );
-            $validator = Validator::make($validationdata, $validationtype);
-        } else {
-            $validationdata = array('price' => $price, 'subcategory' => $subcategory, 'name' => $name, 'description' => $description);
-            $validationtype = array('price' => 'required|numeric|min:0', 'subcategory' => 'required|not_in:0', 'name' => 'required', 'description' => 'required');
-            $validator = Validator::make($validationdata, $validationtype);
-        }
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -138,7 +123,7 @@ class CoffeeController extends Controller
             if (!empty($id)) {
 
                 DB::table('foods')->where('id', $id)->update($data);
-                if ($small!="") {
+                if (!empty($small)) {
                     $coffee_sizes = [
                         'food_id' => $id,
                         'small' => $small,
@@ -148,7 +133,6 @@ class CoffeeController extends Controller
                     DB::table('sizes2')->where('food_id', $id)->update($coffee_sizes);
                 }
 
-                echo ">>>>>>>>>>>>>>>>>>>>> : ". $id."<br/>". $small."<br/>". $medium."<br/>".$large;
                 if ($fullCream != "") {
                     $coffee_add_extra = [
                         'food_id' => $id,
@@ -161,7 +145,7 @@ class CoffeeController extends Controller
                     DB::table('coffee_add_extra_new')->where('food_id', $id)->update($coffee_add_extra);
                     $req->session()->flash('msg', '<div class="alert alert-success">Record updated <a class="close" data-dismiss="alert">×</a> </div>');
                 }
-
+                // $req->session()->flash('msg', '<div class="alert alert-success">Record updated <a class="close" data-dismiss="alert">×</a> </div>');
             } else {
 
                 $lastid = DB::table('foods')->insertGetId($data);
@@ -175,6 +159,7 @@ class CoffeeController extends Controller
                     ];
 
                     DB::table('sizes2')->insertGetId($coffee_sizes);
+
                 }
 
                 if ($fullCream != "") {
@@ -188,7 +173,7 @@ class CoffeeController extends Controller
                     ];
 
                     DB::table('coffee_add_extra_new')->insertGetId($coffee_add_extra);
-                    $req->session()->flash('msg', '<div class="alert alert-success">Record Added <a class="close" data-dismiss="alert">×</a> </div>');
+                  $req->session()->flash('msg', '<div class="alert alert-success">Record Added <a class="close" data-dismiss="alert">×</a> </div>');
                 }
             }
 
@@ -196,22 +181,19 @@ class CoffeeController extends Controller
         }
     }
 
-    protected function deleteFood($id, Request $req)
-    {
+    protected function deleteFood($id, Request $req) {
 
         DB::table('foods')->where('id', $id)->delete();
         $req->session()->flash('msg', '<div class="alert alert-success">Record Deleted <a class="close" data-dismiss="alert">×</a> </div>');
         return redirect('admin/food');
     }
 
-    protected function category()
-    {
+    protected function category() {
         $data['records'] = DB::table('category')->get();
         return view('admin/category', $data);
     }
 
-    protected function saveCategory(Request $req)
-    {
+    protected function saveCategory(Request $req) {
         $Category = $req->get('category');
         $id = $req->get('id');
         if (empty($Category)) {
@@ -254,20 +236,19 @@ class CoffeeController extends Controller
             }
         }
     }
-    protected function deleteCategory($id, Request $req)
-    {
+    protected function deleteCategory($id, Request $req) {
 
         DB::table('category')->where('id', $id)->delete();
         $req->session()->flash('msg', '<div class="alert alert-success">Record Deleted <a class="close" data-dismiss="alert">×</a> </div>');
         return redirect('admin/category');
     }
-    protected function subcategory()
-    {
-        $data['records'] = DB::table('subcategory')->get();
+    protected function subcategory() {
+        $data['records'] = DB::table('subcategory')
+      ->where('subcategory.id','!=', 9)
+      ->get();
         return view('admin/subcategory', $data);
     }
-    protected function saveSubcategory(Request $req)
-    {
+    protected function saveSubcategory(Request $req) {
         $Category = $req->get('subcategory');
         $id = $req->get('id');
         if (empty($Category)) {
@@ -309,14 +290,13 @@ class CoffeeController extends Controller
             }
         }
     }
-    protected function deleteSubcategory($id, Request $req)
-    {
+    protected function deleteSubcategory($id, Request $req) {
 
         DB::table('subcategory')->where('id', $id)->delete();
         $req->session()->flash('msg', '<div class="alert alert-success">Record Deleted <a class="close" data-dismiss="alert">×</a> </div>');
         return redirect('admin/subcategory');
     }
-    public function addcategory($id = 0, Request $req)
+       public function addcategory($id = 0, Request $req)
     {
         $data = [];
         if (!empty($id)) {
@@ -334,6 +314,7 @@ class CoffeeController extends Controller
         $id = $req->get('id');
         if (!empty($id)) {
 
+          
             $name = $req->get('name');
             $image = $req->file('image');
             $validationdata = array('name' => $name);
@@ -363,12 +344,12 @@ class CoffeeController extends Controller
             }
 
         } else {
-
+         
             $name = $req->get('name');
             // $id = $req->get('id');
             $image = $req->file('image');
             $validationdata = array('name' => $name, 'image' => $image);
-            $validationtype = array('name' => 'required', 'image' => 'required');
+            $validationtype = array('name' => 'required','image' => 'required');
             $validator = Validator::make($validationdata, $validationtype);
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
@@ -390,7 +371,7 @@ class CoffeeController extends Controller
                 }
                 $id = DB::table('subcategory')->insertGetId($data);
                 $req->session()->flash('msg', '<div class="alert alert-success">Record Added <a class="close" data-dismiss="alert">×</a> </div>');
-
+               
             }
         }
         return redirect('admin/subcategory');

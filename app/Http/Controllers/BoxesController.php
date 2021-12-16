@@ -1,24 +1,28 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Box;
-use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManagerStatic as Image;
-use Redirect;
-use Session;
 use Validator;
-
+use File;
+use Session;
+use Redirect;
 class BoxesController extends Controller
 {
     public function __construct()
     {
         // if(empty(Session::get('user_email'))){
-
+ 
         //     Redirect::to('/')->send();
         //   }
+        //   $this->middleware(function ($request, $next) {
+        //     if (Session::get("user_email") == "") {
+        //         Redirect::to('/')->send();
+        //     }
+        //     return $next($request);
+        // });
     }
     /**
      * Display a listing of the resource.
@@ -97,8 +101,8 @@ class BoxesController extends Controller
     }
     public function getAllBoxes()
     {
-     
-        $boxes = DB::table('boxes')
+        // $boxes = Box::all();
+          $boxes = DB::table('boxes')
         ->select('boxes.*')
          ->where([
             ['status', '=', 1],
@@ -111,15 +115,21 @@ class BoxesController extends Controller
         $boxes = DB::table('boxes')->limit(1)->get();
         return json_encode($boxes);
     }
-
+    
+ 
     public function viewAll()
     {
         if (empty(Session::get('user_email'))) {
 
             Redirect::to('/')->send();
         } else {
-            $data['boxes'] = DB::table('boxes')->where('status', 1)->get();
-            return view('admin/boxes', $data);
+        $data['boxes'] = DB::table('foods')
+        ->where([
+            ['status', '=', 1],
+            ['subcategory_id', '=', 9]
+        ])
+        ->get();
+        return view('admin/boxes', $data);
         }
     }
     public function addboxes($id = 0, Request $req)
@@ -128,20 +138,21 @@ class BoxesController extends Controller
 
             Redirect::to('/')->send();
         } else {
-            $data = [];
-            if (!empty($id)) {
-                $data['records'] = DB::table('boxes')->where('id', $id)->get()->first();
 
-                if (empty($data['records'])) {
-                    return redirect('/admin/addBoxes');
-                }
+        $data = [];
+        if (!empty($id)) {
+            $data['records'] = DB::table('foods')->where('id', $id)->get()->first();
+
+            if (empty($data['records'])) {
+                return redirect('/admin/addBoxes');
             }
-            return view('admin/addBoxes', $data);
+        }
+        return view('admin/addBoxes', $data);
         }
     }
     public function add_boxes(Request $req)
     {
-        if (empty(Session::get('user_email'))) {
+         if (empty(Session::get('user_email'))) {
 
             Redirect::to('/')->send();
         } else {
@@ -152,91 +163,93 @@ class BoxesController extends Controller
             $id = $req->get('id');
             $image = $req->file('box');
 
-            if (!empty($id)) {
+        if (!empty($id)) {
+            
+            $validationdata = array('price' => $price, 'name' => $name, 'title' => $title, 'description' => $description);
+            $validationtype = array(
+                'price' => 'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+                'name' => 'required',
+                'title' => 'required',
+                'description' => 'required',
+            );
 
-                $validationdata = array('price' => $price, 'name' => $name, 'title' => $title, 'description' => $description);
-                $validationtype = array(
-                    'price' => 'required|integer|min:0',
-                    'name' => 'required',
-                    'title' => 'required',
-                    'description' => 'required',
-                );
-
-                $validator = Validator::make($validationdata, $validationtype);
-                if ($validator->fails()) {
-
-                    return redirect()->back()->withErrors($validator)->withInput();
-                } else {
-                    $data = [
-                        'box_name' => $name,
-                        'box_title' => $title,
-                        'box_price' => $price,
-                        'box_description' => $description,
-                        'status' => 1,
-                    ];
-                    $time = time();
-                    if ($req->hasFile('box')) {
-                        $image = $req->file('box');
-                        $imagename = $time . 'cfimg.' . $image->getClientOriginalExtension();
-                        $destinationPath = public_path('/images/Box/');
-
-                        if (!File::isDirectory($destinationPath)) {
-                            File::makeDirectory($destinationPath, 0777, true, true);
-                        }
-
-                        $filename = $image->getClientOriginalName();
-                        $image_resize = \Image::make($image->getRealPath())->save($destinationPath . $imagename);
-                        $data['box_image'] = $imagename;
-
-                    }
-                    DB::table('boxes')->where('id', $id)->update($data);
-                    $req->session()->flash('msg', '<div class="alert alert-success">Record updated <a class="close" data-dismiss="alert">×</a> </div>');
-                }
-
+            $validator = Validator::make($validationdata, $validationtype);
+            if ($validator->fails()) {
+               
+                return redirect()->back()->withErrors($validator)->withInput();
             } else {
-                $validationdata = array('price' => $price, 'name' => $name, 'title' => $title, 'description' => $description, 'box' => $image);
-                $validationtype = array(
-                    'price' => 'required|integer|min:0',
-                    'name' => 'required',
-                    'title' => 'required',
-                    'description' => 'required',
-                    'box' => 'required');
+                $data = [
+                    'name' => $name,
+                    'title' => $title,
+                    'price' => $price,
+                    'description' => $description,
+                    'subcategory_id' =>9,
+                    'status' => 1,
+                ];
+                $time = time();
+                if ($req->hasFile('box')) {
+                    $image = $req->file('box');
+                    $imagename = $time . 'cfimg.' . $image->getClientOriginalExtension();
+                    $destinationPath = public_path('/images/Box/');
 
-                $validator = Validator::make($validationdata, $validationtype);
-
-                if ($validator->fails()) {
-
-                    return redirect()->back()->withErrors($validator)->withInput();
-                } else {
-                    $data = [
-                        'box_name' => $name,
-                        'box_title' => $title,
-                        'box_price' => $price,
-                        'box_description' => $description,
-                        'status' => 1,
-                    ];
-                    $time = time();
-                    if ($req->hasFile('box')) {
-                        $image = $req->file('box');
-                        $imagename = $time . 'cfimg.' . $image->getClientOriginalExtension();
-                        $destinationPath = public_path('/images/Box/');
-
-                        if (!File::isDirectory($destinationPath)) {
-                            File::makeDirectory($destinationPath, 0777, true, true);
-                        }
-
-                        $filename = $image->getClientOriginalName();
-                        $image_resize = \Image::make($image->getRealPath())->save($destinationPath . $imagename);
-                        $data['box_image'] = $imagename;
-
+                    if (!File::isDirectory($destinationPath)) {
+                        File::makeDirectory($destinationPath, 0777, true, true);
                     }
-                    $id = DB::table('boxes')->insertGetId($data);
-                    $req->session()->flash('msg', '<div class="alert alert-success">Record Added <a class="close" data-dismiss="alert">×</a> </div>');
+
+                    $filename = $image->getClientOriginalName();
+                    $image_resize = \Image::make($image->getRealPath())->save($destinationPath . $imagename);
+                    $data['img'] = $imagename;
 
                 }
+                DB::table('foods')->where('id', $id)->update($data);
+                $req->session()->flash('msg', '<div class="alert alert-success">Record updated <a class="close" data-dismiss="alert">×</a> </div>');
+            }
+
+        } else {
+            $validationdata = array('price' => $price, 'name' => $name, 'title' => $title, 'description' => $description, 'box' => $image);
+            $validationtype = array(
+                'price' => 'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+                'name' => 'required',
+                'title' => 'required',
+                'description' => 'required',
+                'box' => 'required');
+
+            $validator = Validator::make($validationdata, $validationtype);
+
+            if ($validator->fails()) {
+     
+                return redirect()->back()->withErrors($validator)->withInput();
+            } else {
+                $data = [
+                    'name' => $name,
+                    'title' => $title,
+                    'price' => $price,
+                    'description' => $description,
+                    'subcategory_id' =>9,
+                    'status' => 1,
+                ];
+                $time = time();
+                if ($req->hasFile('box')) {
+                    $image = $req->file('box');
+                    $imagename = $time . 'cfimg.' . $image->getClientOriginalExtension();
+                    $destinationPath = public_path('/images/Box/');
+
+                    if (!File::isDirectory($destinationPath)) {
+                        File::makeDirectory($destinationPath, 0777, true, true);
+                    }
+
+                    $filename = $image->getClientOriginalName();
+                    $image_resize = \Image::make($image->getRealPath())->save($destinationPath . $imagename);
+                    $data['img'] = $imagename;
+
+                }
+                $id = DB::table('foods')->insertGetId($data);
+                $req->session()->flash('msg', '<div class="alert alert-success">Record Added <a class="close" data-dismiss="alert">×</a> </div>');
 
             }
-            return redirect('admin/viewBoxes');
+
+        }
+        return redirect('admin/viewBoxes');
         }
     }
     public function deleteBoxes($id, Request $req)

@@ -1,45 +1,52 @@
-@extends('admin.layouts.home')
+
+@extends('Layouts.app')
 
 @section('content')
-<link href="{{url('/')}}/css/plugins/dataTables/datatables.css">
+<div class="page-header" >
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <section class="content-header">
-<div class="col-md-3">
-        <h2 style="font-weight:bold;margin-top:-5px;margin-left:-15px">
-            Orders
-            <small> box orders</small>
-        </h2>
+    <div class="page-header-content">
+        <div class="page-title" style="margin-top:-10px;margin-bottom:-10px">
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Orders</span> - View Box Orders</h4>
         </div>
-        <div class="col-md-2 pull-right">
-        <ol class="breadcrumb" style="background-color:rgb(243,243,244);float:right;">
-            <li><a href="#"><i class="fas fa-tachometer-alt"></i> Home</a></li>
-            <li class="active">Dashboard</li>
-        </ol>
-        </div>
-    </section>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
+    </div>
 
-                    <div class="ibox-title"style="margin-bottom:10px;height:65px;background-color:#e0e0e0" >
-                            <form  method="post"  action="{{url('admin/search_order_box_by_mobilenumber')}}">
-                            {{ csrf_field() }}
-                                <div  class="col-lg-3" style="margin-left:-10px;margin-bottom:15px";>
-                                    <input id="myinputbox" type="text"  autocomplete="off" name="id" id="id"  class="form-control"/>
-                                </div>
-                            <div  class="col-lg-6" style="margin-top:8px">Scan QR code here (enter customer mobile number)</div>
-                            </form>
-                    </div>
-                    
-                <div class="ibox-content">
-                    @if(Session::has('msg'))
-                    {!! Session::get('msg') !!}
-                    @endif
+    <div class="breadcrumb-line" >
+        <ul class="breadcrumb">
+            <li><a href="/dashboard"><i class="icon-home2 position-left"></i> Home</a></li>
+            <li><a href="/admin/view_user">Orders</a></li>
+            <li class="active">View box orders</li>
+        </ul>
+    </div>
+</div>
 
 
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example">
+
+
+<div class="content  animated fadeInRight">
+<div class="panel panel-flat" style="background-color:#e0e0e0" >
+    <div class="panel-body">
+    <form  method="post"  action="{{url('admin/search_order_by_mobilenumber')}}">
+                {{ csrf_field() }}
+                <div  class="col-lg-3" style="margin-left:-10px">
+                    <input id="myinputbox" type="text"  autocomplete="off" name="id" id="id"  class="form-control"/>
+                </div>
+                <div  class="col-lg-6" style="margin-top:8px">Scan QR code here (enter customer mobile number)</div>
+            </form>
+    </div>
+</div>
+
+
+    <div class="panel panel-flat">
+        <div class="panel-body">
+
+
+            @if(Session::has('msg'))
+            {!! Session::get('msg') !!}
+            @endif
+
+
+            <div class="table-responsive">
+            <table class="table table-striped table-hover dataTables-example">
                             <thead>
                                 <tr>
                                     <th>Order id</th>
@@ -112,48 +119,46 @@
                                 </tr>
                             </tfoot> -->
                         </table>
-                     
-                    </div>
+                                        </div>
 
-                </div>
+                                        </div>
+                                        </div>
+                                        </div>
 
-            </div>
-        </div>
-    </div>
-</div>
-<script src="{{url('/')}}/js/plugins/dataTables/datatables.min.js"></script>
-<script src="{{url('/')}}/js/plugins/bootbox/bootbox.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('.dataTables-example').DataTable({
-        "order": [[ 4, "desc" ]]
-    });
+
+                                        <script src="{{url('/')}}/js/plugins/dataTables/datatables.min.js"></script>
+                                        <script src="{{url('/')}}/js/plugins/bootbox/bootbox.min.js"></script>
+                                        <script>
+$(document).ready(function () {
+$('.dataTables-example').DataTable({
+    "order": [[4, "desc"]]
+});
 
 });
-window.onload = function() {
-  var input = document.getElementById("myinputbox").focus();
+window.onload = function () {
+var input = document.getElementById("myinputbox").focus();
 }
 
 function deleteconfirm(id) {
-    bootbox.confirm({
-        title: "Delete Record",
-        message: "Are you sure you want to delete?",
-        buttons: {
-            confirm: {
-                label: 'Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'No',
-                className: 'btn-danger'
-            }
+bootbox.confirm({
+    title: "Delete Record",
+    message: "Are you sure you want to delete?",
+    buttons: {
+        confirm: {
+            label: 'Yes',
+            className: 'btn-success'
         },
-        callback: function(result) {
-            if (result) {
-                window.location.href = '{{url("admin/deletefood")}}' + '/' + id;
-            }
+        cancel: {
+            label: 'No',
+            className: 'btn-danger'
         }
-    });
+    },
+    callback: function (result) {
+        if (result) {
+            window.location.href = '{{url("admin/deletefood")}}' + '/' + id;
+        }
+    }
+});
 }
-</script>
-@endsection
+                                        </script>
+                                        @endsection

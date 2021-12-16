@@ -58,7 +58,7 @@
 
 
 
-    <form action="login" method="post">
+    <form action="syslogin" method="post">
     {{csrf_field()}}
       <div class="form-group has-feedback">
         <input type="text" class="form-control" name="email" placeholder="User name">
