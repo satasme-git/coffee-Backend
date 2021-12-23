@@ -179,9 +179,12 @@ class POSController extends Controller {
 
     public function removeToCart( $uid ) {
         Cart::remove( $uid );
+        
+        
         // Cart::clear();
-
-        return json_encode( Cart::total() );
+$total=Cart::total();
+return response()->json(  $total , 200 );
+        // return json_encode( $total );
     }
 
     public function cancelToCart() {
@@ -607,6 +610,25 @@ class POSController extends Controller {
         ->where('foods.subcategory_id', 9)
         ->get();
 
+    }
+     public function searchCollector(Request $request){
+        $search = $request->term;
+        $students = DB::table('users')
+                ->select('users.id', 'users.name', 'users.email', 'users.mobile_no')
+                ->where([
+                    ['name', 'LIKE', '%' . $search . '%'],
+                    ['users.status', '=', 0],
+                    ])
+                ->get();
+
+        $data = [];
+        foreach ($students as $key => $value) {
+            $data[] = ['id' => $value->id, 'value' => $value->name."  , ".$value->email."  ,  ".$value->mobile_no,
+                    // 'cre_first_name'=>$value->cre_first_name,
+                   
+            ];
+        }
+        return response($data);
     }
         
     

@@ -6,15 +6,15 @@
 
     <div class="page-header-content">
         <div class="page-title" style="margin-top:-10px;margin-bottom:-10px">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Customer</span> - View customers</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Event</span> - View events</h4>
         </div>
     </div>
 
     <div class="breadcrumb-line" >
         <ul class="breadcrumb">
-            <li><a href="/dashboard"><i class="icon-home2 position-left"></i> Home</a></li>
-            <li><a href="/admin/view_user">Customer</a></li>
-            <li class="active">View customers</li>
+            <li><a href="/admin/dashboard"><i class="icon-home2 position-left"></i> Home</a></li>
+            <li><a href="/admin/viewEvents">Event</a></li>
+            <li class="active">View events</li>
         </ul>
     </div>
 </div>

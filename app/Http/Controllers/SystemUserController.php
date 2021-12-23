@@ -74,7 +74,7 @@ class SystemUserController extends Controller
         $id = $req->get('id');
 
         $validationdata = array('user_fname' => $user_fname, 'user_lname' => $user_lname, 'user_nic' => $user_nic, 'user_dob' => $user_dob, 'username' => $username, 'role_id' => $role_id);
-        $validationtype = array('user_fname' => 'required', 'user_lname' => 'required', 'user_nic' => 'required', 'user_dob' => 'required|not_in:0|date|date_format:Y-m-d|before:yesterday', 'username' => 'required', 'role_id' => 'required');
+        $validationtype = array('user_fname' => 'required', 'user_lname' => 'required', 'user_nic' => 'required|max:12', 'user_dob' => 'required|not_in:0|date|date_format:Y-m-d|before:yesterday', 'username' => 'required', 'role_id' => 'required');
 
         $validator = Validator::make($validationdata, $validationtype);
         if ($validator->fails()) {

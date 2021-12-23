@@ -48,6 +48,8 @@
 
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 
@@ -239,12 +241,12 @@
                         <div class="sidebar-user">
                             <div class="category-content">
                                 <div class="media">
-                                    <a href="#" class="media-left"><img src="assets/images/placeholder.jpg" class="img-circle img-sm" alt=""></a>
+                                    <a href="#" class="media-left"><img src="{{ asset('/images/')}}/avatar.jpg" class="img-circle img-sm" alt=""></a>
                                     <div class="media-body">
-                                        <span class="media-heading text-semibold">Victoria Baker</span>
-                                        <div class="text-size-mini text-muted">
-                                            <i class="icon-pin text-size-small"></i> &nbsp;Santa Ana, CA
-                                        </div>
+                                        	<span class="media-heading text-semibold">{{Session::get('user_info.suser_fname') }} {{Session::get('user_info.suser_flname') }}</span>
+									<div class="text-size-mini text-muted">
+										<i class="fa fa-envelope-o text-size-small"></i> &nbsp;{{Session::get('user_info.suser_username') }}
+									</div>
                                     </div>
 
                                     <div class="media-right media-middle">
@@ -267,7 +269,7 @@
 
 								<!-- Main -->
 								<li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
-								<li class="active"><a href="/dashboard"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a></li>
+								<li class="active"><a href="/admin/dashboard"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a></li>
 							
 								<li>
 									<a href="#"><i class="icon-user-tie"></i> <span>Customer management</span></a>
@@ -295,8 +297,8 @@
 								<li>
 									<a href="#"><i class="icon-folder-open2"></i> <span>Category Management</span></a>
 									<ul>
-										<li><a href="{{url('/admin/subcategory')}}">View Foods</a></li>
-										<li><a href="{{url('admin/addcategory/0')}}" id="layout1">Create Food</a></li>
+										<li><a href="{{url('/admin/subcategory')}}">View Category</a></li>
+										<li><a href="{{url('admin/addcategory/0')}}" id="layout1">Create Category</a></li>
 									</ul>
 								</li>
 								<li>
@@ -331,7 +333,7 @@
 									<a href="#"><i class="icon-store"></i> <span>Shop Open </span></a>
 									<ul>
 										<li><a href="{{url('/admin/open')}}">Shop Open Details</a></li>
-										<li><a href="{{url('admin/user')}}" id="layout1">Create User</a></li>
+										<!--<li><a href="{{url('admin/user')}}" id="layout1">Create User</a></li>-->
 									</ul>
 								</li>
                                 <li>

@@ -4,15 +4,15 @@
 
     <div class="page-header-content">
         <div class="page-title" style="margin-top:-10px;margin-bottom:-10px">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Slide</span> - View slides</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Open</span> - Shop open & close details</h4>
         </div>
     </div>
 
     <div class="breadcrumb-line" >
         <ul class="breadcrumb">
-            <li><a href="/dashboard"><i class="icon-home2 position-left"></i> Home</a></li>
-            <li><a href="/admin/view_user">Slide</a></li>
-            <li class="active">View slides</li>
+            <li><a href="/admin/dashboard"><i class="icon-home2 position-left"></i> Home</a></li>
+            <li><a href="/admin/open">Shop Open</a></li>
+            <li class="active">Shop open & close details</li>
         </ul>
     </div>
 </div>

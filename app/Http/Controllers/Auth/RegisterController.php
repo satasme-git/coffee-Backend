@@ -208,7 +208,7 @@ class RegisterController extends Controller
     }
 	public function systemuserlogout(Request $request){
 		$request->session()->forget('user_email');
-		return view('login');
+		return view('login2');
 	}
 	public function fileUpload(Request $req){
 	       $id = $req->get('member_id');
@@ -287,5 +287,45 @@ class RegisterController extends Controller
         			  );
         		return json_encode(5); 
     }
+    	public function loginValidate(Request $request){
+		$user_username = $request->user_username;
+        $user_password = $request->user_password;
+
+	
+        $validationdata = array( 'user_username' => $user_username, 'user_password' => $user_password );
+        $validationtype = array( 'user_username' => 'required', 'user_password' => 'required' );
+
+        $validator = Validator::make( $validationdata, $validationtype );
+
+        if ( $validator->fails() ) {
+			echo "".$user_username." ? ".$user_password;
+            return redirect()->back()->withErrors( $validator )->withInput();
+        }else{
+			if ( $request->user_username != '' && $request->user_password != '' ) {
+				$user = System_user::where( 'suser_username', '=', $request->user_username )->first();
+               
+                if ( System_user::where( 'suser_username', $request->user_username )->exists() ) {
+
+                    if ( !empty( $user ) && Hash::check( $request->user_password, $user->suser_password ) ) {
+                       Session::put('user_email', $request->user_username);
+						Session::put('user_info', $user);
+						Session::put('role_id', $user->role_id); 
+						return redirect('/admin/dashboard');
+                        
+                    } else {
+                        $request->session()->flash('msg', '<div id="alert-msg" class="alert alert-danger">Password is incorrect <a class="close" data-dismiss="alert">×</a> </div>');
+                        return redirect( '/' );
+                    }
+
+                } else {
+                    $request->session()->flash('msg', '<div id="alert-msg"  class="alert alert-danger">Username & Password are incorrect <a class="close" data-dismiss="alert">×</a> </div>');
+                        return redirect( '/' );
+                }
+
+            } else {
+
+            }
+		}
+	}
 	
 }

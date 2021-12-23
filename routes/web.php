@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {return view('login');});
+Route::get('/', function () {return view('login2');});
 
 
 //admin login
 Route::get('/admin', 'Admin\LoginController@index');
 
 // dashboard
-Route::get('/admin/dashboard', 'Admin\DashboardController@index');
+Route::get('/admin/dashboard', 'App\Http\Controllers\Admin\DashboardController@index');
 
 //customers
 Route::get('/admin/addcustomers/{id}', 'App\Http\Controllers\Admin\CustomerController@addCustomers');
@@ -139,6 +139,7 @@ Route::get('/admin/view_system_users', 'App\Http\Controllers\SystemUserControlle
 Route::get('/admin/update/{id}', 'App\Http\Controllers\SystemUserController@edit');
 Route::get('/admin/deleteuser/{id}', 'App\Http\Controllers\SystemUserController@destroy');
 
+Route::post('/login_validate', 'App\Http\Controllers\Auth\RegisterController@loginValidate');
 Route::post('/syslogin', 'App\Http\Controllers\Auth\RegisterController@systemUserLoginCheck');
 Route::get('/logout', 'App\Http\Controllers\Auth\RegisterController@systemuserlogout');
 
@@ -179,3 +180,12 @@ Route::post('/add_customers', 'App\Http\Controllers\POSController@add_customers'
 
 Route::post('/form_submit', 'App\Http\Controllers\POSController@form_submit');
 Route::get('/testing', 'App\Http\Controllers\POSController@testing');
+Route::get('/autocomplete2-searchCollector','App\Http\Controllers\POSController@searchCollector');
+
+Route::get('/admin/monthlyCollection','App\Http\Controllers\Admin\DashboardController@monthlyCollection');
+Route::get('/admin/todayOrders','App\Http\Controllers\Admin\DashboardController@todayOrders');
+Route::get('/admin/todayOrdersCount','App\Http\Controllers\Admin\DashboardController@todayOrdersCount');
+Route::get('/admin/monthlyrevenue','App\Http\Controllers\Admin\DashboardController@monthlyrevenue');
+Route::get('/admin/total_customers','App\Http\Controllers\Admin\DashboardController@total_customers');
+Route::get('/admin/card_orders','App\Http\Controllers\Admin\DashboardController@card_orders');
+Route::get('/admin/cash_orders','App\Http\Controllers\Admin\DashboardController@cash_orders');

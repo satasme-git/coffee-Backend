@@ -249,7 +249,7 @@ class OrderControllerAdmin extends Controller
                 $items = DB::table('order_foods')
         			->join('foods', 'order_foods.foods_id', '=', 'foods.id')
         			->join('order_items_topins', 'order_foods.id', '=', 'order_items_topins.order_foods_id')
-        			->select('foods.img','foods.id','foods.name','foods.description', 'order_foods.*','order_items_topins.*')
+        			->select('foods.img','foods.id','foods.name','foods.description','foods.subcategory_id', 'order_foods.*','order_items_topins.*')
                     ->where('order_foods.orders_id', $order->id)
                     ->get();
             

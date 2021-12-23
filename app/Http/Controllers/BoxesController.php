@@ -255,7 +255,7 @@ class BoxesController extends Controller
     public function deleteBoxes($id, Request $req)
     {
         $data = ['status' => '0'];
-        DB::table('boxes')->where('id', $id)->update($data);
+        DB::table('foods')->where('id', $id)->update($data);
         $req->session()->flash('msg', '<div class="alert alert-success">Boxes Deleted <a class="close" data-dismiss="alert">×</a> </div>');
         return redirect('admin/viewBoxes');
 

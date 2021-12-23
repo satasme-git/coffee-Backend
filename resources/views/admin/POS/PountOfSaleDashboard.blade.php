@@ -21,12 +21,13 @@
                     <div class="form-group {{ $errors->has('customer_name') ? ' has-error' : '' }}">
       
                                 <label>Select Customer:</label>
-                                <select id="aioConceptName" data-placeholder="Select Username"  class="form-control select"  id="customer_name" name="customer_name" >
-                                    <option id="aaaa"></option>
-                                    @foreach($users as $user)
-                                    <option  @if( $user->id==Session::get('customer_id')) selected  @endif value="{{$user->id}}"  >{{$user->name}}</option>
-                                    @endforeach
-                                </select>
+                                  <input type="text" class="form-control" id="search" name="search" placeholder="Enter Customer name" autofocus @if(Session::get('customer_name')!="") value="{{Session::get('customer_name')}}"  @endif>
+                                <!--<select id="aioConceptName" data-placeholder="Select Username"  class="form-control select"  id="customer_name" name="customer_name" >-->
+                                <!--    <option id="aaaa"></option>-->
+                                <!--    @foreach($users as $user)-->
+                                <!--    <option  @if( $user->id==Session::get('customer_id')) selected  @endif value="{{$user->id}}"  >{{$user->name}}</option>-->
+                                <!--    @endforeach-->
+                                <!--</select>-->
                                 @if ($errors->has('customer_name'))
                                 <span class="help-block">
                                     <strong style="color: #ff0000">{{ $errors->first('customer_name') }}</strong>
@@ -38,7 +39,7 @@
                             <table class="  table table-striped table-hover dataTables-example" >
                                 <thead>
                                     <tr>
-                                        <th width="5" style="padding:2px">#Id</th>
+                                        <th width="5" style="padding:2px">Id</th>
                                         <th  width="200" style="padding:2px">Name</th>
                                         <th  width="5" style="padding:2px">Quantity</th> 
                                         <th  width="5" style="padding:2px">Size</th>                         
@@ -125,7 +126,7 @@
                             <div id="products_div" class="table-responsive"  style="height: 440px">
                                 @foreach($details as $detail)
                                 <div class="col-lg-2 col-sm-4">
-                                    <div class="thumbnail">
+                                    <div class="thumbnail" style="height:110px">
                                         <div class="thumb" style="padding:5px;">
                                             <img src="{{ asset('/images/food')}}/{{ $detail->img}}" alt="">
                                             <div class="caption-overflow">
@@ -169,7 +170,7 @@
                                                                     <form id="rates">
                                                                         <div class="radio col-md-4">
                                                                             <label>
-                                                                                <input type="radio" name="size{{$detail->id}}" class="control-primary "  value="Small" checked="checked">
+                                                                                <input type="radio" name="size{{$detail->id}}" class="control-primary "  value="Small" checked="checked"  onclick="getSubTotal({{$detail->id}});">
 
                                                                                 <input type="hidden"  class="control-primary " id="small{{$detail->id}}" value="{{$detail->small}}">
                                                                                 Small
@@ -178,15 +179,15 @@
 
                                                                         <div class="radio col-md-4" style="padding-top:8px">
                                                                             <label>
-                                                                                <input type="radio" name="size{{$detail->id}}" class="control-danger" value="Medium">
-                                                                                <input type="hidden"  class="control-primary " id="medium{{$detail->id}}" value="{{$detail->medium}}">
+                                                                                <input type="radio" name="size{{$detail->id}}" class="control-danger" value="Medium" onclick="getSubTotal({{$detail->id}});">
+                                                                                <input type="hidden"  class="control-primary " id="medium{{$detail->id}}" value="{{$detail->medium}}"  >
                                                                                 Medium
                                                                             </label>
                                                                         </div>
 
                                                                         <div class="radio col-md-4" style="padding-top:8px">
                                                                             <label>
-                                                                                <input type="radio" name="size{{$detail->id}}" class="control-success"  value="Large">
+                                                                                <input type="radio" name="size{{$detail->id}}" class="control-success"  value="Large" onclick="getSubTotal({{$detail->id}});">
                                                                                 <input type="hidden"  class="control-primary " id="large{{$detail->id}}" value="{{$detail->large}}">
                                                                                 Large
                                                                             </label>
@@ -204,7 +205,7 @@
                                                                 <div class="col-md-6" id="rates"> 
                                                                     <div class="checkbox">
                                                                         <label>
-                                                                            <input type="checkbox" id="icecream{{$detail->id}}" name="icecream" value="icecream" class="control-primary" >
+                                                                            <input type="checkbox" id="icecream{{$detail->id}}" name="icecream" value="icecream" class="control-primary"  onclick="getSubTotal({{$detail->id}});">
                                                                             Ice cream
                                                                             <input type="hidden"  class="control-primary " id="_fullcream{{$detail->id}}" value="{{$detail->full_cream}}">
                                                                         </label>
@@ -212,7 +213,7 @@
 
                                                                     <div class="checkbox">
                                                                         <label>
-                                                                            <input type="checkbox" id="skim{{$detail->id}}" name="skim" value="skim" class="control-danger" >
+                                                                            <input type="checkbox" id="skim{{$detail->id}}" name="skim" value="skim" class="control-danger"  onclick="getSubTotal({{$detail->id}});">
                                                                             <input type="hidden"  class="control-primary " id="_skim{{$detail->id}}" value="{{$detail->skim}}">
                                                                             Skim
                                                                         </label>
@@ -220,7 +221,7 @@
 
                                                                     <div class="checkbox">
                                                                         <label>
-                                                                            <input type="checkbox" id="soy{{$detail->id}}" name="soy" value="soy" class="control-success" >
+                                                                            <input type="checkbox" id="soy{{$detail->id}}" name="soy" value="soy" class="control-success"  onclick="getSubTotal({{$detail->id}});">
                                                                             <input type="hidden"  class="control-primary " id="_soy{{$detail->id}}" value="{{$detail->soy}}">
                                                                             Soy
                                                                         </label>
@@ -230,7 +231,7 @@
                                                                 <div class="col-md-6">
                                                                     <div class="checkbox">
                                                                         <label>
-                                                                            <input type="checkbox" id="almond{{$detail->id}}" name="almond" value="almond" class="control-warning" >
+                                                                            <input type="checkbox" id="almond{{$detail->id}}" name="almond" value="almond" class="control-warning"  onclick="getSubTotal({{$detail->id}});">
                                                                             <input type="hidden"  class="control-primary " id="_almond{{$detail->id}}" value="{{$detail->almond}}">
                                                                             Almond
                                                                         </label>
@@ -238,7 +239,7 @@
 
                                                                     <div class="checkbox">
                                                                         <label>
-                                                                            <input type="checkbox" id="oat{{$detail->id}}" name="oat" value="oat" class="control-info" >
+                                                                            <input type="checkbox" id="oat{{$detail->id}}" name="oat" value="oat" class="control-info"  onclick="getSubTotal({{$detail->id}});">
                                                                             <input type="hidden"  class="control-primary " id="_oat{{$detail->id}}" value="{{$detail->oat}}">
                                                                             Oat
                                                                         </label>
@@ -250,12 +251,12 @@
                                                         </div>
                                                         @endif
 
-
-                                                    
-                                                    
                                                         <input type="hidden" class="form-control" name="price{{$detail->id}}" id="price1{{$detail->id}}" value="{{$detail->price}}" readonly style="font-weight:bold;font-size:14px"/>
 
-
+                                                        <div class="row">
+                                                            <label class="control-label col-lg-2" style="float:left">Price:</label>
+                                                            <label class="control-label col-lg-2" id="item_subTotal{{$detail->id}}" style="font-size:20px;font-weight:bold;width:100px;margin-top:-5px" >$0</label>
+                                                        </div>
 
                                                     </div>
                                                     <div class="col-md-6">
@@ -415,8 +416,11 @@
                         @foreach($data as $record)
                         <tr  onclick="setectProduct({{$record->id}})"  data-toggle="modal" data-target="#datamodal2{{$record->id}}">
                             <td>
+                                @if($record->subcategory_id!=9)
                                 <img src="{{ asset('/images/food')}}/{{ $record->img}}" alt="{{$record->name}}" style="width:42px">
-
+                                @else
+                                 <img src="{{ asset('/images/Box')}}/{{ $record->img}}" alt="{{$record->name}}" style="width:42px">
+                                @endif
 
                             </td>
                             <td>{{$record->name}}</td>
@@ -642,7 +646,7 @@
                             <td>{{$order->created_at}}</td>
                             <td style="width:50px">
                                     <a href="{{url('/addtocart/holdInvoice/'.$order->id)}}" class="btn bg-success"><i class="fa fa-pencil"></i> open<a>
-                                            <button onclick="deleteconfirm({{$order->id}})" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                            <button onclick="deleteconfirm('{{$order->id}}')" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                              </td>
 
                         </tr>
@@ -758,10 +762,7 @@
 					</div>
 					<!-- /custom header color -->
 <!-- /modal with basic title -->
-
-
-
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script> -->
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script> 
 
 <script language="JavaScript" type="text/javascript">
 
@@ -782,9 +783,11 @@
 
     });
     // $("#pro_id").val(id);
-
+    getSubTotal(id);
     }
     function add_to_cart(ids) {
+        
+
 
     var id = document.getElementById('pro_id' + ids).value;
     // var id2 = document.getElementById('pro_id2').value;
@@ -859,20 +862,14 @@
     qty = 1;
     }
 
-    total = parseFloat(_fullcream) + parseFloat(_skim) + parseFloat(_soy) + parseFloat(_almond) + parseFloat(_small) + parseFloat(_medium) + parseFloat(_large) + parseFloat(_price);
+    total = parseFloat(_fullcream) + parseFloat(_skim) + parseFloat(_soy) + parseFloat(_almond) + parseFloat(_oat) + parseFloat(_small) + parseFloat(_medium) + parseFloat(_large) + parseFloat(_price);
   
   if(size==""){
     size=box;
-    // alert("size is null : "+box); 
-  }
-//   else{
-//     alert("size is : "+size);
-     
-//   }
- 
 
-    // gross_total = parseFloat(total) * parseFloat(qty);
-    gross_total = parseFloat(total);
+  }
+
+    gross_total = parseFloat(total.toFixed(2));
     // alert("total : "+total+" / qty:  "+qty+" gross / "+gross_total);
     $.ajax({
     type: 'POST',
@@ -887,24 +884,116 @@
 
             },
     }).done(function (data) {
-    $('.dataTables-example > tbody > tr').remove();
-    var pro = JSON.parse(data);
-    //  alert(data);
-    console.log(data);
-    var amount=0;
-    for (var i in pro.original){
-        amount=parseFloat(pro.original[i].price)*parseFloat(pro.original[i].qty);
-         dataHtml += '<tr><td width="5" style="padding-left:10px">' + pro.original[i].product + '</td><td style="padding:2px">' + pro.original[i].name + '</td><td style="padding:2px">' + pro.original[i].qty + '</td><td style="padding:2px">' + pro.original[i].size + '</td><td style="padding:2px">' + amount+ '</td><td width="5" style="padding:4px"><button  onclick="deleteconfirm(' + pro.original[i].uid + ')" class="btn btn-danger remove"><i class="fa fa-trash-o"></i></button></td></tr>';
-    }
-    tablebody.innerHTML = dataHtml;
+        $('.dataTables-example > tbody > tr').remove();
+            var pro = JSON.parse(data);
+            //  alert(data);
+            console.log(data);
+            var amount=0;
+            var total=0;
+            
+            for (var i in pro.original){
+              
+                amount=parseFloat(pro.original[i].price)*parseFloat(pro.original[i].qty);
+                total+=amount;
+                 dataHtml += '<tr><td width="5" style="padding-left:10px">' + pro.original[i].product + '</td><td style="padding:2px">' + pro.original[i].name + '</td><td style="padding:2px">' + pro.original[i].qty + '</td><td style="padding:2px">' + pro.original[i].size + '</td><td style="padding:2px">' + amount.toFixed(2)+ '</td><td width="5" style="padding:4px"><button  onclick="deleteconfirm(' + pro.original[i].uid + ')" class="btn btn-danger remove"><i class="fa fa-trash-o"></i></button></td></tr>';
+            
+                    // document.getElementById('p1').value =total;
+               
+            }
+            tablebody.innerHTML = dataHtml;
+
+            document.getElementById("subtotal").value = total.toFixed(2);
+            document.getElementById("p1").innerHTML = total.toFixed(2);
+             document.getElementById("groos_tot").innerHTML = total.toFixed(2);
     });
-    cartSession();
+        // cartSession();
     $('.remove').live('click', function(){
-    $(this).parent().parent().remove();
+         $(this).parent().parent().remove();
     });
   
     }
 
+function getSubTotal(ids){
+   
+    var id = document.getElementById('pro_id' + ids).value;
+    // var id2 = document.getElementById('pro_id2').value;
+
+
+    var box = $("input[type='radio'][name='box" + id + "']:checked").val();
+    var size = $("input[type='radio'][name='size" + id + "']:checked").val();
+
+    var ele = [];
+    var _fullcream = 0;
+    var _skim = 0;
+    var _soy = 0;
+    var _almond = 0;
+    var _oat = 0;
+    var total = 0;
+    var _small = 0;
+    var _medium = 0;
+    var _large = 0;
+    var _price = 0;
+    var gross_total = 0;
+    if (size == "Small"){
+    _small = document.getElementById("small" + id).value;
+    } else if (size == "Medium"){
+    _medium = document.getElementById("medium" + id).value;
+    } else if (size == "Large"){
+    _large = document.getElementById("large" + id).value;
+    } else{
+    size = "";
+    _price = document.getElementById("price1"+id).value;
+    }
+
+
+    var icecream = document.getElementById("icecream" + id);
+    if (icecream) {
+    if (icecream.checked){
+    _fullcream = document.getElementById("_fullcream" + id).value;
+    ele.push(icecream.value);
+    }
+    }
+    var skim = document.getElementById("skim" + id);
+    if (skim) {
+    if (skim.checked){
+    _skim = document.getElementById("_skim" + id).value;
+    ele.push(skim.value);
+    }
+    }
+    var soy = document.getElementById("soy" + id)
+            if (soy) {
+    if (soy.checked){
+    _soy = document.getElementById("_soy" + id).value;
+    ele.push(soy.value);
+    }
+    }
+    var almond = document.getElementById("almond" + id)
+            if (almond) {
+    if (almond.checked){
+    _almond = document.getElementById("_almond" + id).value;
+    ele.push(almond.value);
+    }
+    }
+    var oat = document.getElementById("oat" + id)
+            if (oat) {
+    if (oat.checked){
+    _oat = document.getElementById("_oat" + id).value;
+    ele.push(oat.value);
+    }
+    }
+    var tablebody = document.getElementById('tbl_body');
+    let dataHtml = '';
+    var qty = document.getElementById("pro_qty" + id).value;
+    if (qty == ""){
+    qty = 1;
+    }
+
+    total = parseFloat(_fullcream) + parseFloat(_skim) + parseFloat(_soy) + parseFloat(_almond)+ parseFloat(_oat) + parseFloat(_small) + parseFloat(_medium) + parseFloat(_large) + parseFloat(_price);
+ console.log(":: "+total);
+
+    document.getElementById("item_subTotal" + id).innerHTML="$ "+total;
+    
+}
 
 
 
@@ -956,7 +1045,10 @@
     function hold(){
 
 var selected_value=  $('#aioConceptName').val();
-if(selected_value!=""){
+
+var userid=document.getElementById('user_id').value;
+
+if(userid!=""){
 
         $.ajax({
     url: "{{url('/count')}}", //this is your uri
@@ -977,7 +1069,7 @@ if(selected_value!=""){
 
 
                                 title: "Are you sure?",
-                                        text: "Once hold,Are you sue want to hold this invoice!",
+                                        text: "Once hold,Are you sure want to hold this invoice!",
                                         icon: "warning",
                                         buttons: true,
                                         dangerMode: true,
@@ -987,7 +1079,7 @@ if(selected_value!=""){
                                 
 
                                         $.ajax({
-                                        url: "{{url('/hold')}}"+"/"+selected_value, //this is your uri
+                                        url: "{{url('/hold')}}"+"/"+userid, //this is your uri
                                                 type: 'get', //this is your method
                                                 success: function (data) {
 
@@ -1034,15 +1126,21 @@ if(selected_value!=""){
    
     }
     function deleteconfirm(id){
+        // alert(id);
 
-    $.ajax({
-    url: "{{url('/remove/to/cart')}}" + "/" + id, //this is your uri
-            type: 'get', //this is your method
-            success: function (data) {
-            // console.log(data);
-            }
-    });
-    cartSession();
+        $.ajax({
+        url: "{{url('/remove/to/cart')}}" + "/" + id, //this is your uri
+                type: 'get', //this is your method
+                success: function (data) {
+
+                    console.log(data);
+                    document.getElementById("p1").innerHTML = data.toFixed(2);
+                    document.getElementById("subtotal").value = data.toFixed(2);
+                    document.getElementById("groos_tot").innerHTML = data.toFixed(2);
+
+                }
+        });
+    // cartSession();
     }
     function cartSession(){
       
@@ -1062,12 +1160,12 @@ if(selected_value!=""){
             total += parseFloat(pro.original[i].price);
             netTotal +=parseFloat(pro.original[i].total);
 
-            dataHtml += '<tr><td width="5"  style="padding-left:10px">' + pro.original[i].product + '</td><td style="padding:2px">' + pro.original[i].name + '</td><td style="padding:2px">' + pro.original[i].qty + '</td><td style="padding:2px">' + pro.original[i].size + '</td><td style="padding:2px">' +amount + '</td><td width="5" style="padding:4px"><button  onclick="deleteconfirm(' + pro.original[i].uid + ')" class="btn btn-danger remove"><i class="fa fa-trash-o"></i></button></td></tr>';
+            dataHtml += '<tr><td width="5"  style="padding-left:10px">' + pro.original[i].product + '</td><td style="padding:2px">' + pro.original[i].name + '</td><td style="padding:2px">' + pro.original[i].qty + '</td><td style="padding:2px">' + pro.original[i].size + '</td><td style="padding:2px">' +amount.toFixed(2) + '</td><td width="5" style="padding:4px"><button  onclick="deleteconfirm('+pro.original[i].uid+')" class="btn btn-danger remove"><i class="fa fa-trash-o"></i></button></td></tr>';
             }
             tablebody.innerHTML = dataHtml;
-            document.getElementById("p1").innerHTML = netTotal;
-            document.getElementById("subtotal").value = netTotal;
-            document.getElementById("groos_tot").innerHTML = netTotal;
+            document.getElementById("p1").innerHTML = netTotal.toFixed(2);
+            document.getElementById("subtotal").value = netTotal.toFixed(2);
+            document.getElementById("groos_tot").innerHTML = netTotal.toFixed(2);
             }
 
     });
@@ -1125,8 +1223,8 @@ if(selected_value!=""){
     $(document).ready(function(){
 
         
-    $('.dataTables-example2').DataTable({
-    });
+    // $('.dataTables-example2').DataTable({
+    // });
     });
     function setectProduct(id){
 
@@ -1152,6 +1250,7 @@ function clearval(id){
 
 $(function(){
 $("#frm").on('submit',function(e){
+    
     e.preventDefault();
 
 
@@ -1203,7 +1302,7 @@ function closeDialog() {
                 for (var i=0 ;i<data.length;i++){
            
                     dataHtml += '<div class="col-lg-2 col-sm-4">'+
-                                    '<div class="thumbnail">'+
+                                    '<div class="thumbnail" style="height:110px">'+
                                         '<div class="thumb" style="padding:5px;">'+
                                             '<img src="{{ asset('/images/food')}}/'+data[i].img+'" alt="">'+
                                             '<div class="caption-overflow">'+
@@ -1237,7 +1336,7 @@ function closeDialog() {
                                 '<label class="text-semibold">Size</label>'+
                                 '<div class="row">'+
                                 '<div class="col-md-12">'+
-                                '<form id="rates"><div class="radio col-md-4"><label><input type="radio" name="size'+data[i].id+'" class="control-primary "  value="Small"  checked="checked"><input type="hidden"  class="control-primary" id="small'+data[i].id+'" value="'+data[i].small+'">Small</label></div><div class="radio col-md-4" style="padding-top:8px"><label><input type="radio" name="size'+data[i].id+'" class="control-danger" value="Medium"><input type="hidden"  class="control-primary" id="medium'+data[i].id+'" value="'+data[i].medium+'">Medium</label></div><div class="radio col-md-4" style="padding-top:8px"><label><input type="radio" name="size'+data[i].id+'" class="control-success"  value="Large"><input type="hidden"  class="control-primary" id="large'+data[i].id+'" value="'+data[i].large+'">Large</label></div></form>'+
+                                '<form id="rates"><div class="radio col-md-4"><label><input type="radio" name="size'+data[i].id+'" class="control-primary "  value="Small"  checked="checked" onclick="getSubTotal('+data[i].id+');"><input type="hidden"  class="control-primary" id="small'+data[i].id+'" value="'+data[i].small+'">Small</label></div><div class="radio col-md-4" style="padding-top:8px"><label><input type="radio" name="size'+data[i].id+'" class="control-danger" value="Medium" onclick="getSubTotal('+data[i].id+');"><input type="hidden"  class="control-primary" id="medium'+data[i].id+'" value="'+data[i].medium+'">Medium</label></div><div class="radio col-md-4" style="padding-top:8px"><label><input type="radio" name="size'+data[i].id+'" class="control-success"  value="Large" onclick="getSubTotal('+data[i].id+');"><input type="hidden"  class="control-primary" id="large'+data[i].id+'" value="'+data[i].large+'">Large</label></div></form>'+
                                 '</div>'+
                                 '</div>'+
                                 '</div>'+
@@ -1247,19 +1346,19 @@ function closeDialog() {
                                 '<div class="col-md-6" id="rates"> '+
                                 '<div class="checkbox">'+
                                 '<label>'+
-                                '<input type="checkbox" id="icecream'+data[i].id+'" name="icecream" value="icecream" class="control-primary" >Ice cream'+
+                                '<input type="checkbox" id="icecream'+data[i].id+'" name="icecream" value="icecream" class="control-primary" onclick="getSubTotal('+data[i].id+');">Ice cream'+
                                 '<input type="hidden"  class="control-primary " id="_fullcream'+data[i].id+'" value="'+data[i].full_cream+'">'+
                                 '</label>'+
                                 '</div>'+
                                 '<div class="checkbox">'+
                                 '<label>'+
-                                '<input type="checkbox" id="skim'+data[i].id+'" name="skim" value="skim" class="control-danger" >'+
+                                '<input type="checkbox" id="skim'+data[i].id+'" name="skim" value="skim" class="control-danger" onclick="getSubTotal('+data[i].id+');">'+
                                 '<input type="hidden"  class="control-primary " id="_skim'+data[i].id+'" value="'+data[i].skim+'">Skim'+
                                 '</label>'+
                                 '</div>'+
                                 '<div class="checkbox">'+
                                 '<label>'+
-                                '<input type="checkbox" id="soy'+data[i].id+'" name="soy" value="soy" class="control-success" >'+
+                                '<input type="checkbox" id="soy'+data[i].id+'" name="soy" value="soy" class="control-success" onclick="getSubTotal('+data[i].id+');">'+
                                 '<input type="hidden"  class="control-primary " id="_soy'+data[i].id+'" value="'+data[i].soy+'">Soy'+
                                 '</label>'+
                                 '</div>'+
@@ -1267,13 +1366,13 @@ function closeDialog() {
                                 '<div class="col-md-6">'+
                                 '<div class="checkbox">'+
                                 '<label>'+
-                                '<input type="checkbox" id="almond'+data[i].id+'" name="almond" value="almond" class="control-warning" >'+
+                                '<input type="checkbox" id="almond'+data[i].id+'" name="almond" value="almond" class="control-warning" onclick="getSubTotal('+data[i].id+');">'+
                                                                             '<input type="hidden"  class="control-primary " id="_almond'+data[i].id+'" value="'+data[i].almond+'">Almond'+
                                                                             '</label>'+
                                                                             '</div>'+
                                                                             '<div class="checkbox">'+
                                                                             '<label>'+
-                                                                            '<input type="checkbox" id="oat'+data[i].id+'" name="oat" value="oat" class="control-info" >'+
+                                                                            '<input type="checkbox" id="oat'+data[i].id+'" name="oat" value="oat" class="control-info" onclick="getSubTotal('+data[i].id+');">'+
                                                                             '<input type="hidden"  class="control-primary " id="_oat'+data[i].id+'" value="'+data[i].oat+'">Oat'+
                                                                             '</label>'+
                                                                             '</div>'+
@@ -1282,6 +1381,11 @@ function closeDialog() {
                                                                             '</div>';
                 }
                 dataHtml+='<input type="hidden" class="form-control" name="price" id="price1'+data[i].id+'" value="'+data[i].price+'"/>'+
+                
+                  '<div class="row">'+
+                                                            '<label class="control-label col-lg-2" style="float:left">Price:</label>'+
+                                                            '<label class="control-label col-lg-2" id="item_subTotal'+data[i].id+'" style="font-size:20px;font-weight:bold;width:100px;margin-top:-5px" >$0</label>'+
+                                                        '</div>'+
                                                                             '</div>'+
                                                                             '<div class="col-md-6">'+
                                                                             '<div class="form-group" style="margin-left:50px">'+
@@ -1344,7 +1448,7 @@ function closeDialog() {
                 for (var i=0 ;i<data.length;i++){
            
                     dataHtml += '<div class="col-lg-2 col-sm-4">'+
-                                    '<div class="thumbnail">'+
+                                    '<div class="thumbnail" style="height:110px">'+
                                         '<div class="thumb" style="padding:5px;">'+
                                             '<img src="{{ asset('/images/Box')}}/'+data[i].img+'" alt="">'+
                                             '<div class="caption-overflow">'+
@@ -1489,5 +1593,28 @@ function createDiscount(){
 
     // cartSession();
 }
+
 </script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<script>
+$('#search').autocomplete({
+
+source: "{{URL::to('autocomplete2-searchCollector')}}",
+select: function (key, value) {
+
+    console.log(value);
+    $('#user_id').val(value.item.id);
+    // $('#cre_first_Name').val(value.item.cre_first_Name);
+    // $('#last_name').val(value.item.last_Name);
+    // $('#cre_phone_number').val(value.item.cre_phone_number);
+    // $('#cre_address').val(value.item.cre_address);
+    // $('#cre_id').val(value.item.id);
+    
+
+
+}
+});
+</script>
+
 @endsection

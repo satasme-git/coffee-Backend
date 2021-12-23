@@ -42,8 +42,8 @@
     <script type="text/javascript" src="{{ asset('LTR/assets/js/pages/form_layouts.js')}}"></script>
 
 
-	<link rel="stylesheet" href="{{ asset('LTR/assets/css/datatables.min.css')}}">
-	<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> -->
+	<!--<link rel="stylesheet" href="{{ asset('LTR/assets/css/datatables.min.css')}}">-->
+	 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> 
 
 
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -184,7 +184,7 @@
 
 								<!-- Main -->
 								<li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
-								<li class="active"><a href="/dashboard"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a></li>
+								<li class="active"><a href="/admin/dashboard"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a></li>
 							
 								<li>
 									<a href="#"><i class="icon-user-tie"></i> <span>Customer management</span></a>
@@ -212,8 +212,8 @@
 								<li>
 									<a href="#"><i class="icon-folder-open2"></i> <span>Category Management</span></a>
 									<ul>
-										<li><a href="{{url('/admin/subcategory')}}">View Foods</a></li>
-										<li><a href="{{url('admin/addcategory/0')}}" id="layout1">Create Food</a></li>
+										<li><a href="{{url('/admin/subcategory')}}">View Category</a></li>
+										<li><a href="{{url('admin/addcategory/0')}}" id="layout1">Create Category</a></li>
 									</ul>
 								</li>
 								<li>
@@ -248,7 +248,7 @@
 									<a href="#"><i class="icon-store"></i> <span>Shop Open </span></a>
 									<ul>
 										<li><a href="{{url('/admin/open')}}">Shop Open Details</a></li>
-										<li><a href="{{url('admin/user')}}" id="layout1">Create User</a></li>
+										<!--<li><a href="{{url('admin/user')}}" id="layout1">Create User</a></li>-->
 									</ul>
 								</li>
 								<li>
@@ -280,7 +280,7 @@
                     <div class="content">
 					<!-- Footer -->
 					<div class="footer text-muted">
-						&copy; 2021. <a href="#">MARLEN'S coffee</a> by <a href="" target="_blank">SATASME</a>
+						&copy; 2021. <a href="https://boxesfree.com/">MARLEN'S coffee</a> by <a href="https://satasme.lk/" target="_blank">SATASME</a>
 					</div>
 					<!-- /footer -->
 
@@ -297,9 +297,9 @@
 	<!-- /page container -->
 
 
-<!-- <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> -->
+ <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> 
 
-<script src="{{ asset('LTR/assets/js/dataTables.min.js')}}"></script>
+<!--<script src="{{ asset('LTR/assets/js/dataTables.min.js')}}"></script>-->
 
 
 

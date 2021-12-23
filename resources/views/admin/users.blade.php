@@ -1,7 +1,7 @@
 @extends('Layouts.app')
 
 @section('content')
-<link href="{{url('/')}}/css/plugins/dataTables/datatables.css">
+<!--<link href="{{url('/')}}/css/plugins/dataTables/datatables.css">-->
 <div class="page-header" >
 
     <div class="page-header-content" style="margin-top:-10px;margin-bottom:-10px">
@@ -81,7 +81,7 @@
                                             <td>0</td>
 
                                             @endif
-                                            <td>{{$users->created_at}}</td>
+                                            <td> {{$users->created_at}}</td>
 
 
                                             <!--@if($users->status == '0')-->
@@ -129,8 +129,8 @@
     <!-- </div>  -->
 </div>
 
-<script src="{{url('/')}}/js/plugins/dataTables/datatables.min.js"></script>
-<script src="{{url('/')}}/js/plugins/bootbox/bootbox.min.js"></script>
+<!--<script src="{{url('/')}}/js/plugins/dataTables/datatables.min.js"></script>-->
+<!--<script src="{{url('/')}}/js/plugins/bootbox/bootbox.min.js"></script>-->
 <script>
                                                     $(document).ready(function(){
                                                     $('.dataTables-example').DataTable({

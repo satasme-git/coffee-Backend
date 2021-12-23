@@ -66,7 +66,7 @@
 
         <div class="page-header-content">
             <div class="page-title" style="margin-top:-10px;margin-bottom:-10px">
-                <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Open</span> - Show open details</h4>
+                <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Open</span> - Update open details</h4>
             </div>
         </div>
 
@@ -74,7 +74,7 @@
             <ul class="breadcrumb">
                 <li><a href="/dashboard"><i class="icon-home2 position-left"></i> Home</a></li>
                 <li><a href="{{url('admin/open')}}">Open</a></li>
-                <li class="active">Show open details</li>
+                <li class="active">Update open details</li>
             </ul>
         </div>
     </div>
